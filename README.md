@@ -1,2 +1,0 @@
-# practice-todo-app
-hii
