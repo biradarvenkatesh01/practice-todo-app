@@ -1,3 +1,9 @@
 # practice-todo-app
 
-basic
+<<<<<<< HEAD
+=======
+
+hii!
+
+hello
+>>>>>>> main
