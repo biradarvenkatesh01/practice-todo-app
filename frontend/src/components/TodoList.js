@@ -2,22 +2,18 @@
 
 import React from 'react';
 
-// 1. Component ko bataya ki woh 'todos' prop receive karega
-function TodoList({ todos }) {
-
-  // 2. Ek check lagaya, agar todos nahi hain to null return karo
-  if (!todos) {
-    return null;
-  }
-
+// 1. Naye functions ko props se receive kiya
+function TodoList({ todos, completeTodo, deleteTodo }) {
   return (
-    <div>
-      <h2>Todo List</h2>
+    <div className="todo-list">
       <ul>
-        {/* 3. Ab yeh code safe hai kyunki humne data pass kiya hai */}
         {todos.map(todo => (
-          <li key={todo.id}>
-            {todo.text}
+          // 2. Har task ke liye ab buttons hain
+          <li key={todo.id} style={{ textDecoration: todo.isCompleted ? 'line-through' : 'none' }}>
+            <span onClick={() => completeTodo(todo.id)}>
+              {todo.text}
+            </span>
+            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>

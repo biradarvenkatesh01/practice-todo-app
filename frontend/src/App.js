@@ -7,26 +7,46 @@ import TodoList from './components/TodoList';
 
 function App() {
   const [todos, setTodos] = useState([
-    { id: 1, text: 'Fix the bug', isCompleted: true },
-    { id: 2, text: 'Add new features', isCompleted: false },
+    { id: 1, text: 'Learn React', isCompleted: false },
+    { id: 2, text: 'Build a To-Do App', isCompleted: true },
   ]);
 
-  // 1. Naya function banaya
   const addTodo = (text) => {
     const newTodo = {
-      id: Date.now(), // Unique ID ke liye current time ka istemal kiya
+      id: Date.now(),
       text: text,
       isCompleted: false,
     };
-    setTodos([...todos, newTodo]); // Purani list ke saath naya todo joda
+    setTodos([...todos, newTodo]);
+  };
+
+  // 1. Task ko complete karne ka function
+  const completeTodo = (id) => {
+    const newTodos = todos.map(todo => {
+      if (todo.id === id) {
+        return { ...todo, isCompleted: !todo.isCompleted };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
+  };
+
+  // 2. Task ko delete karne ka function
+  const deleteTodo = (id) => {
+    const newTodos = todos.filter(todo => todo.id !== id);
+    setTodos(newTodos);
   };
 
   return (
     <div className="App">
       <h1>My To-Do App</h1>
-      {/* 2. addTodo function ko as a prop TodoForm mein bheja */}
       <TodoForm addTodo={addTodo} />
-      <TodoList todos={todos} />
+      {/* 3. Naye functions ko props ke through bheja */}
+      <TodoList
+        todos={todos}
+        completeTodo={completeTodo}
+        deleteTodo={deleteTodo}
+      />
     </div>
   );
 }
