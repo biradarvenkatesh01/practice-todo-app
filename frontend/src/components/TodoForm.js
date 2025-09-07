@@ -1,7 +1,7 @@
 import React from 'react';
 
-// Using a named export to match your import in App.js
-export const TodoForm = () => {
+// This is a function declaration
+function TodoForm() {
   return (
     <form>
       <input type="text" placeholder="Add a new todo" />
@@ -9,3 +9,6 @@ export const TodoForm = () => {
     </form>
   );
 };
+
+// CORRECT: Use export default at the end
+export default TodoForm;

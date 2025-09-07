@@ -1,19 +1,23 @@
-import { useState } from 'react';
-// Change your imports to look like this:
-import { TodoForm } from './components/TodoForm';
-import { TodoList } from './components/TodoList';
+// frontend/src/App.js
+
+import React, { useState } from 'react'; // 1. useState ko import karo
+import './App.css';
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
 
 function App() {
-  const [todos, setTodos] = useState([]);
-  const [todo, setTodo] = useState('');
+  // 2. 'todos' state banayi
+  const [todos, setTodos] = useState([
+    { id: 1, text: 'Fix the bug', isCompleted: true },
+    { id: 2, text: 'Add new features', isCompleted: false },
+  ]);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>Todo App</h1>
-      </header>
+      <h1>My To-Do App</h1>
       <TodoForm />
-      <TodoList />
+      {/* 3. 'todos' state ko as a prop bheja */}
+      <TodoList todos={todos} />
     </div>
   );
 }
