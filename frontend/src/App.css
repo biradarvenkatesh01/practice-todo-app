@@ -1,0 +1,82 @@
+.App {
+  width: 100%;
+  max-width: 500px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  color: #4a4a4a;
+}
+
+form {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+form input {
+  flex-grow: 1;
+  border: 2px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+form input:focus {
+  outline: none;
+  border-color: #7d5fff;
+}
+
+form button {
+  background: #7d5fff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+form button:hover {
+  background: #5a32a3;
+}
+
+.todo-list ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.todo-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 18px;
+}
+
+.todo-list li span {
+  cursor: pointer;
+}
+
+.todo-list li:last-child {
+  border-bottom: none;
+}
+
+.todo-list li button {
+  background: #ff4757;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.todo-list li button:hover {
+  background: #e04050;
+}
