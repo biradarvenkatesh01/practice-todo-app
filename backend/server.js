@@ -1,23 +1,26 @@
 // backend/server.js
 
-// Load environment variables from .env file
 require('dotenv').config();
-
-// Import the express library
 const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-// Create an instance of the express app
+// 1. Routes ko import kiya
+const todoRoutes = require('./routes/todos');
+
 const app = express();
-
-// Use the PORT from the .env file, or 5000 as a default
 const PORT = process.env.PORT || 5000;
 
-// Create a basic route to handle GET requests
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
+app.use(cors());
+app.use(express.json());
 
-// Start the server and listen for requests
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected successfully.'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+// 2. Server ko bataya ki /api/todos par in routes ka istemal kare
+app.use('/api/todos', todoRoutes);
+
 app.listen(PORT, () => {
-  console.log(`Server is active and listening on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
