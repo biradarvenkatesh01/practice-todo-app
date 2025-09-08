@@ -7,9 +7,6 @@ const cors = require('cors');
 
 const todoRoutes = require('./routes/todos'); 
 
-const todoRoutes = require('./routes/todos');
-
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
