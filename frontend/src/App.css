@@ -39,10 +39,15 @@ form button {
   margin-left: 10px;
   cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
 form button:hover {
   background: #5a32a3;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .todo-list ul {
@@ -58,6 +63,7 @@ form button:hover {
   padding: 15px;
   border-bottom: 1px solid #eee;
   font-size: 18px;
+  animation: fadeIn 0.5s ease;
 }
 
 .todo-list li span {
@@ -79,4 +85,14 @@ form button:hover {
 
 .todo-list li button:hover {
   background: #e04050;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

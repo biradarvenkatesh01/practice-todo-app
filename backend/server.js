@@ -4,8 +4,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-// 1. Routes waali file ko import karo
+
 const todoRoutes = require('./routes/todos'); 
+
+const todoRoutes = require('./routes/todos');
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,7 +22,6 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully.'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// 2. Server ko batao ki /api/todos par in routes ka istemal karna hai
 app.use('/api/todos', todoRoutes);
 
 app.listen(PORT, () => {
