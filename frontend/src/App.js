@@ -1,47 +1,61 @@
-import React, { useState, useEffect } from 'react'; // 1. useEffect is added
+// frontend/src/App.js
+
+import React, { useState, useEffect } from 'react'; // 1. useEffect ko import karo
+import axios from 'axios'; // 2. axios ko import karo
 import './App.css';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 
 function App() {
-  const [todos, setTodos] = useState([]); // 2. Initial state is now an empty array
-  const [isLoading, setIsLoading] = useState(true); // 3. New state for loading status
+  const [todos, setTodos] = useState([]); // 3. Initial state ab ek khaali array hai
 
-  // 4. This will run once when the app loads to simulate fetching data
+  // 4. Yeh function app load hote hi backend se saare todos fetch karega
   useEffect(() => {
-    // Simulate a 2-second delay for fetching data from a server
-    setTimeout(() => {
-      const initialTodos = [
-        { id: 1, text: 'Learn React', isCompleted: false },
-        { id: 2, text: 'Build a To-Do App', isCompleted: true },
-      ];
-      setTodos(initialTodos); // Load the data
-      setIsLoading(false); // Set loading to false
-    }, 2000);
-  }, []); // The empty array ensures this runs only once
+    axios.get('/api/todos')
+      .then(response => {
+        setTodos(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []); // Khaali array ka matlab hai ki yeh sirf ek baar chalega jab component load hoga
 
+  // 5. Ab yeh function backend mein naya task add karega
   const addTodo = (text) => {
-    const newTodo = {
-      id: Date.now(),
-      text: text,
-      isCompleted: false,
-    };
-    setTodos([...todos, newTodo]);
+    axios.post('/api/todos', { text: text })
+      .then(response => {
+        setTodos([...todos, response.data]);
+      })
+      .catch(error => {
+        console.error('Error adding todo:', error);
+      });
   };
 
+  // 6. Ab yeh function backend mein task ko complete/incomplete mark karega
   const completeTodo = (id) => {
-    const newTodos = todos.map(todo => {
-      if (todo.id === id) {
-        return { ...todo, isCompleted: !todo.isCompleted };
-      }
-      return todo;
-    });
-    setTodos(newTodos);
+    axios.put(`/api/todos/${id}`)
+      .then(response => {
+        const newTodos = todos.map(todo =>
+          // MongoDB _id ka istemal karta hai
+          todo._id === id ? response.data : todo
+        );
+        setTodos(newTodos);
+      })
+      .catch(error => {
+        console.error('Error updating todo:', error);
+      });
   };
 
+  // 7. Ab yeh function backend se task ko delete karega
   const deleteTodo = (id) => {
-    const newTodos = todos.filter(todo => todo.id !== id);
-    setTodos(newTodos);
+    axios.delete(`/api/todos/${id}`)
+      .then(() => {
+        const newTodos = todos.filter(todo => todo._id !== id);
+        setTodos(newTodos);
+      })
+      .catch(error => {
+        console.error('Error deleting todo:', error);
+      });
   };
 
   return (
@@ -52,11 +66,9 @@ function App() {
         todos={todos}
         completeTodo={completeTodo}
         deleteTodo={deleteTodo}
-        isLoading={isLoading} // 5. Pass the isLoading state to the TodoList
       />
     </div>
   );
 }
 
 export default App;
-

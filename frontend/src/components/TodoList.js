@@ -2,18 +2,23 @@
 
 import React from 'react';
 
-// 1. Naye functions ko props se receive kiya
 function TodoList({ todos, completeTodo, deleteTodo }) {
+  // ... (Your loading and empty state code can remain here)
   return (
     <div className="todo-list">
       <ul>
         {todos.map(todo => (
-          // 2. Har task ke liye ab buttons hain
-          <li key={todo.id} style={{ textDecoration: todo.isCompleted ? 'line-through' : 'none' }}>
-            <span onClick={() => completeTodo(todo.id)}>
+          // Yahan todo.id ki jagah todo._id kiya gaya hai
+          <li key={todo._id} style={{ textDecoration: todo.isCompleted ? 'line-through' : 'none' }}>
+            <span onClick={() => completeTodo(todo._id)}>
               {todo.text}
             </span>
-            <button onClick={() => deleteTodo(todo.id)}>Delete</button>
+            <button onClick={() => {
+              const isConfirmed = window.confirm("Are you sure you want to delete this task?");
+              if (isConfirmed) {
+                deleteTodo(todo._id);
+              }
+            }}>Delete</button>
           </li>
         ))}
       </ul>
