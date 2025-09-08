@@ -1,10 +1,9 @@
 // backend/routes/todos.js
-
 const express = require('express');
 const router = express.Router();
 const Todo = require('../models/Todo');
 
-// GET all todos
+// GET: Saare todos laane ke liye
 router.get('/', async (req, res) => {
   // YEH LINE ADD KARO
   console.log("GET request received for /api/todos");
@@ -13,8 +12,7 @@ router.get('/', async (req, res) => {
   res.json(todos);
 });
 
-// ... baaki ke routes waise hi rahenge ...
-// POST, DELETE, PUT routes
+
 router.post('/', async (req, res) => {
     const newTodo = new Todo({
       text: req.body.text,
