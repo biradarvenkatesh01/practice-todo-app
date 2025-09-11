@@ -1,56 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
-// App.js ka saara logic ab yahaan hai
 function TodoPage() {
   const [todos, setTodos] = useState([]);
+  const navigate = useNavigate();
+
+  // Function to create axios config with token
+  const getConfig = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // If no token, redirect to login
+      navigate('/login');
+      return null;
+    }
+    return {
+      headers: {
+        'x-auth-token': token,
+      },
+    };
+  };
 
   useEffect(() => {
-    // Note: Is code ko chalne ke liye backend mein security add karni padegi
-    axios.get('/api/todos')
-      .then(response => {
-        setTodos(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+    const fetchTodos = async () => {
+      const config = getConfig();
+      if (config) {
+        try {
+          const res = await axios.get('/api/todos', config);
+          setTodos(res.data);
+        } catch (err) {
+          console.error('Error fetching todos:', err);
+          // If token is invalid, it might result in an error
+          if (err.response && err.response.status === 401) {
+            localStorage.removeItem('token');
+            navigate('/login');
+          }
+        }
+      }
+    };
+    fetchTodos();
+  }, [navigate]);
 
-  const addTodo = (text) => {
-    axios.post('/api/todos', { text })
-      .then(response => {
-        setTodos([...todos, response.data]);
-      })
-      .catch(error => {
-        console.error('Error adding todo:', error);
-      });
+  const addTodo = async (text) => {
+    const config = getConfig();
+    if (config) {
+      config.headers['Content-Type'] = 'application/json';
+      try {
+        const res = await axios.post('/api/todos', { text }, config);
+        setTodos([...todos, res.data]);
+      } catch (err) {
+        console.error('Error adding todo:', err);
+      }
+    }
   };
 
-  const completeTodo = (id) => {
-    axios.put(`/api/todos/${id}`)
-      .then(response => {
-        setTodos(todos.map(todo => (todo._id === id ? response.data : todo)));
-      })
-      .catch(error => {
-        console.error('Error updating todo:', error);
-      });
+  const completeTodo = async (id) => {
+    const config = getConfig();
+    if (config) {
+      try {
+        const res = await axios.put(`/api/todos/${id}`, null, config);
+        setTodos(todos.map(todo => (todo._id === id ? res.data : todo)));
+      } catch (err) {
+        console.error('Error completing todo:', err);
+      }
+    }
   };
 
-  const deleteTodo = (id) => {
-    axios.delete(`/api/todos/${id}`)
-      .then(() => {
+  const deleteTodo = async (id) => {
+    const config = getConfig();
+    if (config) {
+      try {
+        await axios.delete(`/api/todos/${id}`, config);
         setTodos(todos.filter(todo => todo._id !== id));
-      })
-      .catch(error => {
-        console.error('Error deleting todo:', error);
-      });
+      } catch (err) {
+        console.error('Error deleting todo:', err);
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
-    <div>
-      <h2>Meri To-Do List</h2>
+    <div className="todo-page-container">
+      <button onClick={handleLogout} className="logout-button">Logout</button>
+      <h2>My Todos</h2>
       <TodoForm addTodo={addTodo} />
       <TodoList
         todos={todos}
@@ -62,3 +100,4 @@ function TodoPage() {
 }
 
 export default TodoPage;
+

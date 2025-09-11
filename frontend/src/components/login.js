@@ -17,17 +17,15 @@ function Login() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Backend API ko login request bhejo
       const res = await axios.post('/api/auth/login', {
         username,
         password,
       });
 
-      // NOTE: Agle step mein hum is token ko a se handle karenge
-      console.log('Login successful, token:', res.data.token);
-      alert('Login successful!');
+      // 1. Token ko localStorage mein save karo
+      localStorage.setItem('token', res.data.token);
       
-      // Login hone ke baad /todos page par bhej do
+      alert('Login successful!');
       navigate('/todos'); 
     } catch (err) {
       console.error(err.response.data);
