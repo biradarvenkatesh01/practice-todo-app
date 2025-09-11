@@ -22,7 +22,7 @@ function Register() {
     }
     try {
       // Backend API ko register request bhejo
-      const res = await axios.post('/api/auth/Register', {
+      const res = await axios.post('/api/auth/register', {
         username,
         password,
       });
@@ -74,4 +74,3 @@ function Register() {
 }
 
 export default Register;
-
