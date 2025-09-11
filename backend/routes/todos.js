@@ -1,36 +1,33 @@
 // backend/routes/todos.js
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth'); // Middleware ko import karo
 const Todo = require('../models/Todo');
 
-// GET: Saare todos laane ke liye
-router.get('/', async (req, res) => {
-  // YEH LINE ADD KARO
-  console.log("GET request received for /api/todos");
-
-  const todos = await Todo.find();
-  res.json(todos);
+// GET all todos for the logged-in user
+router.get('/', auth, async (req, res) => { // 'auth' middleware ka istemal karo
+  try {
+    const todos = await Todo.find({ user: req.user.id });
+    res.json(todos);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
 });
 
-
-router.post('/', async (req, res) => {
+// POST a new todo for the logged-in user
+router.post('/', auth, async (req, res) => { // 'auth' middleware ka istemal karo
+  try {
     const newTodo = new Todo({
       text: req.body.text,
+      user: req.user.id, // User ki ID ko save karo
     });
     const savedTodo = await newTodo.save();
     res.json(savedTodo);
+  } catch (err) {
+    res.status(500).send('Server Error');
+  }
 });
 
-router.delete('/:id', async (req, res) => {
-    const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
-    res.json(deletedTodo);
-});
-
-router.put('/:id', async (req, res) => {
-    const todo = await Todo.findById(req.params.id);
-    todo.isCompleted = !todo.isCompleted;
-    await todo.save();
-    res.json(todo);
-});
+// ... (DELETE and PUT routes will be updated in the next step to be more secure)
 
 module.exports = router;

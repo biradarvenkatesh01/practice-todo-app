@@ -22,7 +22,7 @@ function Register() {
     }
     try {
       // Backend API ko register request bhejo
-      const res = await axios.post('/api/auth/register', {
+      const res = await axios.post('/api/auth/Register', {
         username,
         password,
       });
