@@ -4,7 +4,7 @@ import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import TodoPage from './components/TodoPage';
-import PrivateRoute from './components/PrivateRoute'; // Isse hum agle step mein banayenge
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -16,13 +16,13 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           {/* Main Application Route - Protected by PrivateRoute */}
-          <Route 
-            path="/todos" 
+          <Route
+            path="/todos"
             element={
               <PrivateRoute>
                 <TodoPage />
               </PrivateRoute>
-            } 
+            }
           />
 
           {/* Default Route: Agar user kahin aur jaaye, to use login par bhej do */}
@@ -34,4 +34,3 @@ function App() {
 }
 
 export default App;
-

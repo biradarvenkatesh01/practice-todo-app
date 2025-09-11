@@ -1,28 +1,135 @@
+/* General App container */
 .App {
   width: 100%;
   max-width: 500px;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   text-align: center;
 }
 
-h1 {
-  color: #4a4a4a;
+/* --- Authentication Forms (Login & Register) --- */
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.auth-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #7d5fff;
+  box-shadow: 0 0 0 3px rgba(125, 95, 255, 0.2);
+}
+
+.auth-form button, .logout-button {
+  width: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.auth-form button:hover, .logout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.auth-link {
+  margin-top: 20px;
+  text-align: center;
+  color: #555;
+}
+
+.auth-link a {
+  color: #7d5fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-link a:hover {
+  text-decoration: underline;
+}
+
+
+/* --- To-do Page --- */
+
+.todo-page-container {
+  position: relative;
+}
+
+.logout-button {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: auto;
+  padding: 8px 15px;
+  font-size: 14px;
+}
+
+/* UPDATED FORM STYLES */
 form {
   display: flex;
-  margin-bottom: 20px;
+  flex-direction: column; /* Changed from row to column */
+  margin-bottom: 30px;
 }
 
 form input {
   flex-grow: 1;
   border: 2px solid #eee;
-  border-radius: 4px;
-  padding: 10px;
+  border-radius: 8px;
+  padding: 12px;
   font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 10px; /* Added margin to separate from button */
 }
 
 form input:focus {
@@ -34,20 +141,18 @@ form button {
   background: #7d5fff;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  margin-left: 10px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-left: 0; /* Removed left margin */
   cursor: pointer;
   font-size: 16px;
-  cursor: pointer;
-  font-size: 16px;
+  font-weight: 500;
   transition: background-color 0.3s ease;
 }
+/* END OF UPDATED FORM STYLES */
 
 form button:hover {
   background: #5a32a3;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .todo-list ul {
@@ -64,10 +169,22 @@ form button:hover {
   border-bottom: 1px solid #eee;
   font-size: 18px;
   animation: fadeIn 0.5s ease;
+  transition: background-color 0.3s ease;
 }
+
+.todo-list li:hover {
+  background-color: #f9f9f9;
+}
+
 
 .todo-list li span {
   cursor: pointer;
+  flex-grow: 1;
+}
+
+.todo-list li.completed span {
+  text-decoration: line-through;
+  color: #aaa;
 }
 
 .todo-list li:last-child {
@@ -78,14 +195,22 @@ form button:hover {
   background: #ff4757;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
+  margin-left: 15px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.todo-list li:hover button {
+  opacity: 1;
 }
 
 .todo-list li button:hover {
   background: #e04050;
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -95,54 +220,4 @@ form button:hover {
     opacity: 1;
     transform: translateY(0);
   }
-}
-/* Purane styles ke neeche yeh add kar do */
-
-.auth-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.auth-form {
-  width: 100%;
-  max-width: 400px;
-  padding: 30px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.auth-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; 
-}
-
-.auth-form button {
-    width: 100%;
-}
-
-.auth-link {
-  margin-top: 15px;
-  text-align: center;
 }

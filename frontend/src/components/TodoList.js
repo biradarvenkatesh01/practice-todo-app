@@ -7,7 +7,7 @@ function TodoList({ todos, completeTodo, deleteTodo }) {
     <div className="todo-list">
       <ul>
         {todos.map(todo => (
-          <li key={todo._id} style={{ textDecoration: todo.isCompleted ? 'line-through' : 'none' }}>
+          <li key={todo._id} className={todo.isCompleted ? 'completed' : ''}>
             <span onClick={() => completeTodo(todo._id)}>
               {todo.text}
             </span>

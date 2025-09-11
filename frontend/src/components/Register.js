@@ -21,14 +21,13 @@ function Register() {
       return;
     }
     try {
-      // Backend API ko register request bhejo
       const res = await axios.post('/api/auth/register', {
         username,
         password,
       });
-      console.log(res.data); // Success message ya token
+      console.log(res.data);
       alert('Registration successful! Please log in.');
-      navigate('/login'); // Register hone ke baad login page par bhej do
+      navigate('/login');
     } catch (err) {
       console.error(err.response.data);
       alert('Error in registration: ' + (err.response.data.msg || 'Something went wrong'));

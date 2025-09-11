@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import TodoForm from './TodoForm';
@@ -8,8 +8,8 @@ function TodoPage() {
   const [todos, setTodos] = useState([]);
   const navigate = useNavigate();
 
-  // Function to create axios config with token
-  const getConfig = () => {
+  // Function to create axios config with token, wrapped in useCallback
+  const getConfig = useCallback(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       // If no token, redirect to login
@@ -21,7 +21,7 @@ function TodoPage() {
         'x-auth-token': token,
       },
     };
-  };
+  }, [navigate]);
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -41,7 +41,7 @@ function TodoPage() {
       }
     };
     fetchTodos();
-  }, [navigate]);
+  }, [getConfig, navigate]); // FIX 1: Added `Maps` to the dependency array
 
   const addTodo = async (text) => {
     const config = getConfig();
@@ -60,10 +60,15 @@ function TodoPage() {
     const config = getConfig();
     if (config) {
       try {
-        const res = await axios.put(`/api/todos/${id}`, null, config);
-        setTodos(todos.map(todo => (todo._id === id ? res.data : todo)));
+        // FIX 2: Removed unused 'todoToUpdate' variable
+        // Optimistically update the UI
+        setTodos(todos.map(todo => 
+          todo._id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+        ));
+        await axios.put(`/api/todos/${id}`, null, config);
       } catch (err) {
         console.error('Error completing todo:', err);
+        // You could add logic here to revert the UI on error
       }
     }
   };
@@ -100,4 +105,3 @@ function TodoPage() {
 }
 
 export default TodoPage;
-

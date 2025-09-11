@@ -22,7 +22,6 @@ function Login() {
         password,
       });
 
-      // 1. Token ko localStorage mein save karo
       localStorage.setItem('token', res.data.token);
       
       alert('Login successful!');
@@ -71,4 +70,3 @@ function Login() {
 }
 
 export default Login;
-
