@@ -1,25 +1,71 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Login() {
-  // Is form ko hum agle step mein functional banayenge
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
+
+  const { username, password } = formData;
+  const navigate = useNavigate();
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Backend API ko login request bhejo
+      const res = await axios.post('/api/auth/login', {
+        username,
+        password,
+      });
+
+      // NOTE: Agle step mein hum is token ko a se handle karenge
+      console.log('Login successful, token:', res.data.token);
+      alert('Login successful!');
+      
+      // Login hone ke baad /todos page par bhej do
+      navigate('/todos'); 
+    } catch (err) {
+      console.error(err.response.data);
+      alert('Error in login: ' + (err.response.data.msg || 'Something went wrong'));
+    }
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-form">
         <h2>Login</h2>
-        <form>
+        <form onSubmit={onSubmit}>
           <div className="form-group">
             <label>Username</label>
-            <input type="text" placeholder="Apna username daalein" />
+            <input
+              type="text"
+              placeholder="Enter your username"
+              name="username"
+              value={username}
+              onChange={onChange}
+              required
+            />
           </div>
           <div className="form-group">
             <label>Password</label>
-            <input type="password" placeholder="Apna password daalein" />
+            <input
+              type="password"
+              placeholder="Enter your password"
+              name="password"
+              value={password}
+              onChange={onChange}
+              required
+            />
           </div>
           <button type="submit">Login</button>
         </form>
         <p className="auth-link">
-          Naya account banana hai? <Link to="/register">Yahaan register karein</Link>
+          Don't have an account? <Link to="/register">Register here</Link>
         </p>
       </div>
     </div>
@@ -27,3 +73,4 @@ function Login() {
 }
 
 export default Login;
+
