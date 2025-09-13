@@ -4,15 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
+// API base URL ko environment variable se le rahe hain for deployment flexibility
+const API_URL = process.env.REACT_APP_API_URL || '';
+
 function TodoPage() {
   const [todos, setTodos] = useState([]);
   const navigate = useNavigate();
 
-  // Function to create axios config with token, wrapped in useCallback
+  // Axios config function, ab navigate par depend nahi karta
   const getConfig = useCallback(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      // If no token, redirect to login
       navigate('/login');
       return null;
     }
@@ -28,11 +30,11 @@ function TodoPage() {
       const config = getConfig();
       if (config) {
         try {
-          const res = await axios.get('/api/todos', config);
+          // API_URL ko use kar rahe hain
+          const res = await axios.get(`${API_URL}/api/todos`, config);
           setTodos(res.data);
         } catch (err) {
           console.error('Error fetching todos:', err);
-          // If token is invalid, it might result in an error
           if (err.response && err.response.status === 401) {
             localStorage.removeItem('token');
             navigate('/login');
@@ -41,14 +43,14 @@ function TodoPage() {
       }
     };
     fetchTodos();
-  }, [getConfig, navigate]); // FIX 1: Added `Maps` to the dependency array
+  }, [getConfig, navigate]); // Dependency array ko theek kiya gaya hai
 
   const addTodo = async (text) => {
     const config = getConfig();
     if (config) {
       config.headers['Content-Type'] = 'application/json';
       try {
-        const res = await axios.post('/api/todos', { text }, config);
+        const res = await axios.post(`${API_URL}/api/todos`, { text }, config);
         setTodos([...todos, res.data]);
       } catch (err) {
         console.error('Error adding todo:', err);
@@ -59,16 +61,19 @@ function TodoPage() {
   const completeTodo = async (id) => {
     const config = getConfig();
     if (config) {
+      // Optimistic UI update se pehle original state ko save kar rahe hain
+      const originalTodos = [...todos];
+      setTodos(todos.map(todo =>
+        todo._id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
+      ));
+
       try {
-        // FIX 2: Removed unused 'todoToUpdate' variable
-        // Optimistically update the UI
-        setTodos(todos.map(todo => 
-          todo._id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
-        ));
-        await axios.put(`/api/todos/${id}`, null, config);
+        await axios.put(`${API_URL}/api/todos/${id}`, null, config);
       } catch (err) {
         console.error('Error completing todo:', err);
-        // You could add logic here to revert the UI on error
+        // Agar API call fail hoti hai, to UI ko original state par revert kar rahe hain
+        setTodos(originalTodos);
+        alert('Could not update todo. Please try again.');
       }
     }
   };
@@ -76,11 +81,16 @@ function TodoPage() {
   const deleteTodo = async (id) => {
     const config = getConfig();
     if (config) {
+       // Optimistic UI update se pehle original state ko save kar rahe hain
+      const originalTodos = [...todos];
+      setTodos(todos.filter(todo => todo._id !== id));
       try {
-        await axios.delete(`/api/todos/${id}`, config);
-        setTodos(todos.filter(todo => todo._id !== id));
+        await axios.delete(`${API_URL}/api/todos/${id}`, config);
       } catch (err) {
         console.error('Error deleting todo:', err);
+        // Agar API call fail hoti hai, to UI ko original state par revert kar rahe hain
+        setTodos(originalTodos);
+        alert('Could not delete todo. Please try again.');
       }
     }
   };

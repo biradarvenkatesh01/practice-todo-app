@@ -22,6 +22,10 @@ mongoose.connect(process.env.MONGO_URI)
 // Routes ka istemal karo
 app.use('/api/todos', todoRoutes);
 app.use('/api/auth', authRoutes); // Auth routes ko use karo
+// Health check route
+app.get('/', (req, res) => {
+  res.send('Backend is running');
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
